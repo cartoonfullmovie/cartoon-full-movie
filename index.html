@@ -1,151 +1,301 @@
-<aside class="sidebar">
-            <ul class="sidebar-menu">
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link active" onclick="selectCategory('الكل')">🏠 الصفحة الرئيسية</a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link" onclick="selectCategory('مسلسلات')">📺 مسلسلات مغامرات</a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link" onclick="selectCategory('اناشيد')">🎵 أناشيد وأغاني أطفال</a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link" onclick="selectCategory('انشطة')">✂️ أنشطة وتلوين</a>
-                </li>
-            </ul>
-        </aside>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سينما الأطفال الآمنة 🎈</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- تنسيقات الموقع (CSS) --- */
+        :root {
+            --bg-color: #1a0b2e; /* خلفية بنفسجية داكنة مريحة للعين */
+            --card-bg: #281545; /* خلفية البطاقات */
+            --accent-color: #39ff14; /* أخضر فسفوري مميز (مثل نيون سلاحف النينجا) */
+            --text-color: #ffffff;
+            --button-color: #ff5722; /* برتقالي حيوي للأزرار */
+        }
 
-        <main class="content-area">
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 50px;
+        }
+
+        /* الهيدر (رأس الصفحة) */
+        header {
+            background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* الحاوية الرئيسية */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            border-right: 5px solid var(--accent-color);
+            padding-right: 15px;
+            color: var(--accent-color);
+        }
+
+        /* شبكة عرض الكرتون */
+        .cartoon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        /* بطاقة الكرتون */
+        .cartoon-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .cartoon-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-color);
+            box-shadow: 0 15px 30px rgba(57, 255, 20, 0.2);
+        }
+
+        .thumbnail-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background-color: #000;
+        }
+
+        .thumbnail-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--button-color);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .cartoon-card:hover .play-badge {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .card-info {
+            padding: 20px;
+        }
+
+        .card-info h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .card-info p {
+            font-size: 0.95rem;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* مشغل الفيديو (نافذة منبثقة تفاعلية) */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* نسبة 16:9 للحفاظ على أبعاد الفيديو */
+            height: 0;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: red;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1010;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .modal-title {
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            background-color: rgba(0,0,0,0.2);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* تكييف الشاشات الصغيرة (الهواتف) */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>عالم الكرتون الآمن للأطفال 🎈</h1>
+        <p>شاهد مسلسلاتك المفضلة بجودة عالية وبيئة آمنة 100% ✨</p>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">أحدث المسلسلات المضافة</h2>
+
+        <div class="cartoon-grid">
             
-            <section class="hero-banner">
-                <div class="hero-content">
-                    <h1 class="hero-title">سلاحف النينجا - الموسم الأول</h1>
-                    <p style="margin-bottom: 20px; color: var(--text-gray);">شاهد مغامرات ليو، راف، دوني، ومايكي الشيقة ضد قوى الشريدر في شوارع نيويورك!</p>
-                    <a href="#play" class="play-now-btn" onclick="playNinjaTurtles()">▶ ابدأ المشاهدة الآن</a>
+            <div class="cartoon-card" onclick="openPlayer('سلاحف النينجا - الموسم الأول 🐢', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                <div class="thumbnail-container">
+                    <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80" alt="سلاحف النينجا">
+                    <div class="play-badge">▶</div>
                 </div>
-            </section>
-
-            <section class="video-player-section" id="videoPlayerSection" style="display: none; margin: 30px 20px; padding: 20px; background-color: #1e1e1e; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 id="playingTitle" style="color: #00ff66; margin: 0;">🎥 الآن يعرض: سلاحف النينجا - الحلقة 1</h3>
-                    <button onclick="closePlayer()" style="background: #ff3333; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">إغلاق المشغل ✖</button>
+                <div class="card-info">
+                    <h3>سلاحف النينجا (الموسم 1)</h3>
+                    <p>انضم إلى ليوناردو، رافاييل، دوناتيلو، ومايكل أنجلو في مغامراتهم الأولى لحماية نيويورك من الأشرار!</p>
                 </div>
-                
-                <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; background: #000;">
-                    <iframe id="videoIframe" src="" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
+            </div>
+
+            <div class="cartoon-card" onclick="openPlayer('مغامرات الفضاء 🚀', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                <div class="thumbnail-container">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80" alt="مغامرات الفضاء">
+                    <div class="play-badge">▶</div>
                 </div>
-
-                <div class="episodes-list" style="margin-top: 15px; display: flex; gap: 10px; overflow-x: auto; padding: 10px 0;">
-                    <button onclick="changeEpisode('الحلقة 1: البداية', 'رابط_تضمين_الحلقة_1_هنا')" style="background: #333; color: white; border: 1px solid #00ff66; padding: 10px 15px; border-radius: 8px; cursor: pointer; white-space: nowrap;">الحلقة 1</button>
-                    <button onclick="changeEpisode('الحلقة 2: مواجهة شريدر', 'رابط_تضمين_الحلقة_2_هنا')" style="background: #333; color: white; border: 1px solid #00ff66; padding: 10px 15px; border-radius: 8px; cursor: pointer; white-space: nowrap;">الحلقة 2</button>
-                    <button onclick="changeEpisode('الحلقة 3: خطر كرانج', 'رابط_تضمين_الحلقة_3_هنا')" style="background: #333; color: white; border: 1px solid #00ff66; padding: 10px 15px; border-radius: 8px; cursor: pointer; white-space: nowrap;">الحلقة 3</button>
-                    </div>
-            </section>
-
-            <section class="section-container">
-                <h2 class="section-title">✨ المقترحة لك الآن</h2>
-                <div class="grid-layout">
-                    
-                    <div class="cartoon-card" id="play" onclick="playNinjaTurtles()">
-                        <img src="https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?q=80&amp;w=300" alt="سلاحف النينجا" class="cartoon-thumb" />
-                        <div class="cartoon-info">
-                            <div class="cartoon-name">سلاحف النينجا</div>
-                            <span class="age-badge">7-12 سنة</span>
-                        </div>
-                    </div>
-
-                    <div class="cartoon-card" onclick="playVideo('رحلة الفضاء العجيبة')">
-                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&amp;w=300" alt="مغامري الفضاء" class="cartoon-thumb" />
-                        <div class="cartoon-info">
-                            <div class="cartoon-name">رحلة الفضاء العجيبة</div>
-                            <span class="age-badge">3-6 سنوات</span>
-                        </div>
-                    </div>
-
-                    <div class="cartoon-card" onclick="playVideo('مدرسة الحروف والعلوم')">
-                        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&amp;w=300" alt="مدرسة الحروف" class="cartoon-thumb" />
-                        <div class="cartoon-info">
-                            <div class="cartoon-name">مدرسة الحروف والعلوم</div>
-                            <span class="age-badge">3-6 سنوات</span>
-                        </div>
-                    </div>
-
-                    <div class="cartoon-card" onclick="playVideo('الأرنب الكوميدي الضاحك')">
-                        <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&amp;w=300" alt="الأرنب المشاكس" class="cartoon-thumb" />
-                        <div class="cartoon-info">
-                            <div class="cartoon-name">الأرنب الكوميدي الضاحك</div>
-                            <span class="age-badge">جميع الأعمار</span>
-                        </div>
-                    </div>
-
+                <div class="card-info">
+                    <h3>مغامرات الفضاء الشيقة</h3>
+                    <p>رحلة ممتعة عبر الكواكب والنجوم لاستكشاف أسرار الكون الفسيح ومواجهة التحديات!</p>
                 </div>
-            </section>
+            </div>
 
-            <section class="activities-banner">
-                <div class="activities-text">
-                    <h3>✂️ ركن الأنشطة اليدوية والتلوين!</h3>
-                    <p>اطبع قناع سلحفاتك المفضلة (أزرق، أحمر، برتقالي، بنفسجي) واصنع قناعك الخاص بالمنزل.</p>
-                </div>
-                <a href="#" class="download-btn" onclick="alert('جاري تحميل كراسة الأنشطة والتلوين للطباعة المنزلية!')">📥 تحميل الأنشطة وطباعتها</a>
-            </section>
+        </div>
+    </div>
 
-        </main>
+    <div class="video-modal" id="videoModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closePlayer()">✕</button>
+            <div class="video-wrapper">
+                <iframe id="videoIframe" src="" allowfullscreen></iframe>
+            </div>
+            <div class="modal-title" id="modalTitle">اسم الكرتون</div>
+        </div>
     </div>
 
     <script>
-        // تفعيل التنقل بين التصنيفات بالقائمة الجانبية
-        function selectCategory(category) {
-            document.querySelectorAll('.sidebar-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-            alert("تم الانتقال إلى قسم: " + event.currentTarget.innerText);
+        /* --- أكواد تفاعلية (JavaScript) --- */
+        
+        // فتح المشغل وتحديث رابط الفيديو والعنوان
+        function openPlayer(title, videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoIframe');
+            const modalTitle = document.getElementById('modalTitle');
+
+            modalTitle.innerText = title;
+            iframe.src = videoUrl;
+            modal.style.display = 'flex';
         }
 
-        // دالة تشغيل فيديوهات المقترحة العامة برمز تنبيهي
-        function playVideo(videoName) {
-            alert("🎬 جاري تشغيل عرض: " + videoName + " بأمان وبدون إعلانات!");
-        }
-
-        // دالة مخصصة لفتح مشغل حلقات سلاحف النينجا
-        function playNinjaTurtles() {
-            let playerSection = document.getElementById('videoPlayerSection');
-            playerSection.style.display = 'block'; // إظهار المشغل
-            
-            // تعيين الحلقة الأولى كبداية تشغيل افتراضية (استبدل الرابط برابط تضمين الحلقة الحقيقي)
-            changeEpisode('الحلقة 1: البداية', 'https://www.youtube.com/embed/tgbNymZ7vqY'); 
-            
-            // تمرير الشاشة تلقائياً إلى المشغل لكي ينتبه الطفل له
-            playerSection.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // دالة لتغيير الحلقة المعروضة داخل المشغل
-        function changeEpisode(episodeName, videoUrl) {
-            document.getElementById('playingTitle').innerText = "🎥 الآن يعرض: سلاحف النينجا - " + episodeName;
-            document.getElementById('videoIframe').src = videoUrl;
-        }
-
-        // دالة إغلاق المشغل
+        // إغلاق المشغل وإيقاف تشغيل الفيديو لمنع استمرار الصوت
         function closePlayer() {
-            document.getElementById('videoPlayerSection').style.display = 'none';
-            document.getElementById('videoIframe').src = ""; // إيقاف تشغيل الفيديو عند الإغلاق
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoIframe');
+
+            modal.style.display = 'none';
+            iframe.src = ''; // تفريغ الرابط لإيقاف الفيديو
         }
 
-        function openParentalLock() {
-            let num1 = Math.floor(Math.random() * 10) + 1;
-            let num2 = Math.floor(Math.random() * 10) + 1;
-            let correctAnswer = num1 + num2;
-            
-            let userAnswer = prompt("بوابة أولياء الأمور آمنة!\nيرجى إثبات أنك شخص بالغ بحل هذه العملية:\n" + num1 + " + " + num2 + " = ؟");
-            
-            if (parseInt(userAnswer) === correctAnswer) {
-                alert("أهلاً بك يا ولي الأمر! تم فتح لوحة التحكم بنجاح لتحديد وقت المشاهدة وفلترة المحتوى.");
-            } else {
-                alert("إجابة خاطئة! هذه المنطقة مخصصة لأولياء الأمور فقط.");
+        // إغلاق المشغل عند الضغط خارج نافذة الفيديو
+        window.onclick = function(event) {
+            const modal = document.getElementById('videoModal');
+            if (event.target == modal) {
+                closePlayer();
             }
         }
-
-        function startVoiceSearch() {
-            alert("🎤 الميكروفون يستمع الآن للطفل... قل اسم الكرتون بصوت واضح!");
-        }
     </script>
+</body>
+</html>
