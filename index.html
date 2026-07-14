@@ -7,11 +7,11 @@
     <style>
         /* --- الألوان والهوية البصرية --- */
         :root {
-            --bg-dark: #0f172a; /* خلفية داكنة مريحة للعين */
-            --bg-card: #1e293b; /* لون بطاقات العرض */
-            --accent-green: #22c55e; /* أخضر فسفوري مبهج */
-            --accent-orange: #f97316; /* برتقالي حيوي */
-            --accent-blue: #3b82f6; /* أزرق نيون */
+            --bg-dark: #0f172a; 
+            --bg-card: #1e293b; 
+            --accent-green: #22c55e; 
+            --accent-orange: #f97316; 
+            --accent-blue: #3b82f6; 
             --text-light: #f8fafc;
             --text-gray: #94a3b8;
         }
@@ -34,7 +34,7 @@
             padding-bottom: 50px;
         }
 
-        /* --- الهيدر (شريط التنقل) --- */
+        /* --- الهيدر --- */
         header {
             display: flex;
             justify-content: space-between;
@@ -102,7 +102,7 @@
             box-shadow: 0 0 15px var(--accent-blue);
         }
 
-        /* --- البانر المتحرك الرئيسي (Hero Banner) --- */
+        /* --- البانر الرئيسي --- */
         .hero-banner {
             background: linear-gradient(to top, var(--bg-dark), rgba(0,0,0,0.4)), 
                         url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1200') no-repeat center/cover;
@@ -144,7 +144,7 @@
             box-shadow: 0 0 20px var(--accent-green);
         }
 
-        /* --- تقسيم الصفحة الرئيسي (Sidebar + Main Content) --- */
+        /* --- تقسيم الصفحة الرئيسي --- */
         .main-layout {
             display: flex;
             gap: 30px;
@@ -152,7 +152,7 @@
             margin-bottom: 50px;
         }
 
-        /* القائمة الجانبية اليمنى (Sidebar) */
+        /* القائمة الجانبية */
         .sidebar {
             width: 280px;
             background-color: var(--bg-card);
@@ -202,19 +202,40 @@
             transform: translateX(-5px);
         }
 
-        /* المحتوى الرئيسي الأيسر */
+        /* المحتوى الرئيسي */
         .content-area {
             flex-grow: 1;
         }
 
+        .section-header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
         .section-title {
             font-size: 24px;
-            margin-bottom: 20px;
             border-right: 5px solid var(--accent-green);
             padding-right: 15px;
         }
 
-        /* شبكة عرض كروت الكرتون (Grid) */
+        .back-btn {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .back-btn:hover {
+            background-color: #ea580c;
+            transform: scale(1.05);
+        }
+
+        /* شبكة عرض كروت الكرتون */
         .grid-layout {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -231,12 +252,26 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
         }
 
         .cartoon-card:hover {
             transform: translateY(-8px);
             border-color: var(--accent-orange);
             box-shadow: 0 10px 25px rgba(249, 115, 22, 0.3);
+        }
+
+        /* شارة تدل على أن الكرتون عبارة عن سلسلة أجزاء */
+        .series-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-blue);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
         }
 
         .cartoon-thumb {
@@ -268,7 +303,7 @@
             margin-top: 5px;
         }
 
-        /* --- ركن الأنشطة التفاعلية --- */
+        /* --- ركن الأنشطة --- */
         .activities-banner {
             background: linear-gradient(135deg, #1e3a8a, #3b82f6);
             border-radius: 25px;
@@ -304,9 +339,9 @@
             box-shadow: 0 0 15px rgba(249, 115, 22, 0.6);
         }
 
-        /* --- نافذة الفيديو المنبثقة (Video Modal) --- */
+        /* --- نافذة الفيديو المنبثقة --- */
         .video-modal {
-            display: none; /* مخفية افتراضياً */
+            display: none; 
             position: fixed;
             top: 0;
             left: 0;
@@ -348,7 +383,7 @@
 
         .video-wrapper {
             position: relative;
-            padding-bottom: 56.25%; /* أبعاد عرض الفيديو 16:9 */
+            padding-bottom: 56.25%; 
             height: 0;
         }
 
@@ -366,7 +401,6 @@
             text-align: center;
         }
 
-        /* رسالة عدم وجود نتائج */
         .no-results {
             text-align: center;
             font-size: 18px;
@@ -375,7 +409,7 @@
             padding: 40px;
         }
 
-        /* --- التجاوب مع الشاشات (Responsive) --- */
+        /* --- التجاوب مع الشاشات --- */
         @media (max-width: 992px) {
             .main-layout {
                 flex-direction: column;
@@ -398,7 +432,7 @@
 <body>
 
     <header>
-        <div class="logo" onclick="selectCategory('الكل')">
+        <div class="logo" onclick="backToMain()">
             <span>🎨</span> سينما كرتون الآمنة
         </div>
         
@@ -412,6 +446,7 @@
 
     <div class="main-layout">
         
+        <!-- القائمة الجانبية -->
         <aside class="sidebar">
             <div class="sidebar-title">
                 <span>📁</span> تصنيفات السينما
@@ -441,22 +476,31 @@
             </ul>
         </aside>
 
+        <!-- المحتوى الرئيسي -->
         <main class="content-area">
             
             <section class="hero-banner" id="heroSection">
                 <div class="hero-content">
-                    <h1 class="hero-title" id="heroTitle">سلاحف النينجا - الموسم الأول</h1>
-                    <p id="heroDesc" style="margin-bottom: 20px; color: var(--text-gray);">شاهد مغامرات ليو، راف، دوني، ومايكي الشيقة ضد قوى الشريدر في شوارع نيويورك!</p>
-                    <button class="play-now-btn" onclick="playHeroVideo()">▶ ابدأ المشاهدة الآن</button>
+                    <h1 class="hero-title" id="heroTitle">سلاحف النينجا - مغامرة الأبطال</h1>
+                    <p style="margin-bottom: 20px; color: var(--text-gray);">استكشف مواسم وأفلام سلاحف النينجا بالكامل وشاهد الجزء المفضل لديك الآن!</p>
+                    <button class="play-now-btn" onclick="openSeriesDetails(1)">▶ تصفح أجزاء السلسلة</button>
                 </div>
             </section>
 
-            <section class="section-container">
+            <!-- عنوان الصفحة و أزرار التحكم -->
+            <div class="section-header-container">
                 <h2 class="section-title" id="pageTitle">✨ المقترحة لك الآن</h2>
+                <button class="back-btn" id="backBtn" style="display: none;" onclick="backToMain()">⬅ عودة للرئيسية</button>
+            </div>
+
+            <!-- شبكة الكروت -->
+            <section class="section-container">
                 <div class="grid-layout" id="cardsGrid">
-                    </div>
+                    <!-- الكروت يتم توليدها ديناميكياً -->
+                </div>
             </section>
 
+            <!-- ركن الأنشطة -->
             <section class="activities-banner">
                 <div class="activities-text">
                     <h3>✂️ ركن الأنشطة اليدوية والتلوين!</h3>
@@ -468,6 +512,7 @@
         </main>
     </div>
 
+    <!-- مشغل الفيديو -->
     <div class="video-modal" id="videoModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeVideo()">&times;</span>
@@ -481,8 +526,9 @@
         </div>
     </div>
 
+    <!-- الجافا سكريبت المطورة خصيصاً للمجموعات -->
     <script>
-        // قاعدة بيانات المحتوى الداخلي للموقع (صفحات مدمجة في صفحة واحدة)
+        // قاعدة البيانات الجديدة التي تدعم وجود "سلاسل وأجزاء" بداخل الكروت
         const libraryData = [
             {
                 id: 1,
@@ -491,7 +537,12 @@
                 secondaryCategory: "مدبلج",
                 age: "7-12 سنة",
                 img: "https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?q=80&w=300",
-                videoUrl: "https://www.youtube.com/embed/gLshK7p9o2E" // رابط فيديو كمثال
+                isSeries: true, // علامة تدل على أن هذا الكرتون يحتوي على أجزاء/مواسم
+                parts: [
+                    { name: "سلاحف النينجا - الموسم الأول", videoUrl: "https://www.youtube.com/embed/gLshK7p9o2E", badge: "الموسم 1" },
+                    { name: "سلاحف النينجا - الموسم الثاني", videoUrl: "https://www.youtube.com/embed/gLshK7p9o2E", badge: "الموسم 2" },
+                    { name: "فيلم سلاحف النينجا: مغامرة الفضاء", videoUrl: "https://www.youtube.com/embed/fD14S9A_mlo", badge: "فيلم مميز" }
+                ]
             },
             {
                 id: 2,
@@ -500,7 +551,11 @@
                 secondaryCategory: "مدبلج",
                 age: "3-6 سنوات",
                 img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=300",
-                videoUrl: "https://www.youtube.com/embed/fD14S9A_mlo"
+                isSeries: true,
+                parts: [
+                    { name: "رحلة الفضاء - الحلقة الأولى: كوكب المريخ", videoUrl: "https://www.youtube.com/embed/fD14S9A_mlo", badge: "الحلقة 1" },
+                    { name: "رحلة الفضاء - الحلقة الثانية: حلقة زحل اللامعة", videoUrl: "https://www.youtube.com/embed/S_7iWofBfhs", badge: "الحلقة 2" }
+                ]
             },
             {
                 id: 3,
@@ -509,7 +564,7 @@
                 secondaryCategory: "الكل",
                 age: "3-6 سنوات",
                 img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=300",
-                videoUrl: "https://www.youtube.com/embed/S_7iWofBfhs"
+                videoUrl: "https://www.youtube.com/embed/S_7iWofBfhs" // كرتون عادي بدون أجزاء
             },
             {
                 id: 4,
@@ -545,7 +600,7 @@
                 secondaryCategory: "الكل",
                 age: "جميع الأعمار",
                 img: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=300",
-                isDownloadable: true // وسم خاص للأنشطة
+                isDownloadable: true 
             },
             {
                 id: 8,
@@ -558,45 +613,52 @@
             }
         ];
 
-        // المتغيرات العامة للتحكم بالصفحة الحالية
         let currentCategory = "الكل";
+        let isInsideSeries = false; // لمتابعة ما إذا كان المستخدم يتصفح سلسلة أجزاء حالياً
 
-        // تشغيل البداية لعرض كافة الكروت
         window.onload = function() {
             renderContent();
         };
 
-        // دالة إنشاء وعرض البطاقات بناءً على الفلترة والبحث اللحظي
+        // عرض الكروت الرئيسية
         function renderContent(searchQuery = "") {
+            isInsideSeries = false;
+            document.getElementById("backBtn").style.display = "none"; // إخفاء زر العودة
+            document.getElementById("heroSection").style.display = "flex"; // إظهار البانر
+            
             const grid = document.getElementById("cardsGrid");
-            grid.innerHTML = ""; // مسح الشبكة الحالية
+            grid.innerHTML = ""; 
 
-            // فلترة البيانات بناءً على التصنيف المختار وكلمة البحث
             const filteredData = libraryData.filter(item => {
                 const matchesCategory = (currentCategory === "الكل" || item.category === currentCategory || item.secondaryCategory === currentCategory);
                 const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
                 return matchesCategory && matchesSearch;
             });
 
-            // عرض رسالة إذا لم تكن هناك نتائج مطابقة للبحث
             if (filteredData.length === 0) {
                 grid.innerHTML = `<div class="no-results">🔍 لم نجد أي عروض مطابقة لبحثك.. جرب كلمة أخرى ممتعة!</div>`;
                 return;
             }
 
-            // إنشاء البطاقات وعرضها داخل الشبكة
             filteredData.forEach(item => {
                 const card = document.createElement("div");
                 card.className = "cartoon-card";
                 
-                // تحديد الحدث المناسب للبطاقة (مشاهدة فيديو أم تحميل ملف تلوين)
-                if (item.isDownloadable) {
+                // تحديد ماذا يحدث عند الضغط على الكارت
+                if (item.isSeries) {
+                    // إذا كان سلسلة، يتم عرض أجزائه بالداخل بدلاً من تشغيل الفيديو فوراً
+                    card.onclick = () => openSeriesDetails(item.id);
+                } else if (item.isDownloadable) {
                     card.onclick = () => alert("📥 جاري تحميل ورقة نشاط: " + item.name + " جاهزة للطباعة المنزلية!");
                 } else {
                     card.onclick = () => playVideo(item.name, item.videoUrl, item.age);
                 }
 
+                // إضافة شارة زرقاء تدل على وجود أجزاء متعددة بالداخل
+                const badgeHTML = item.isSeries ? `<span class="series-badge">🎬 سلسلة أجزاء</span>` : '';
+
                 card.innerHTML = `
+                    ${badgeHTML}
                     <img src="${item.img}" alt="${item.name}" class="cartoon-thumb" />
                     <div class="cartoon-info">
                         <div class="cartoon-name">${item.name}</div>
@@ -607,47 +669,82 @@
             });
         }
 
-        // دالة تصفح الأقسام والصفحات عبر الروابط الجانبية
+        // دالة تفتح تفاصيل الأجزاء والمواسم للسلسلة المحددة
+        function openSeriesDetails(seriesId) {
+            isInsideSeries = true;
+            const series = libraryData.find(item => item.id === seriesId);
+            if (!series) return;
+
+            // إخفاء البانر العلوي لتركيز الرؤية على الحلقات
+            document.getElementById("heroSection").style.display = "none";
+            
+            // تحديث عنوان الصفحة وإظهار زر العودة
+            document.getElementById("pageTitle").innerText = `📂 أجزاء وحلقات: ${series.name}`;
+            document.getElementById("backBtn").style.display = "block";
+
+            const grid = document.getElementById("cardsGrid");
+            grid.innerHTML = ""; // مسح الشبكة لتنزيل الأجزاء الجديدة
+
+            // إنشاء كروت الأجزاء والمواسم الداخلية
+            series.parts.forEach(part => {
+                const card = document.createElement("div");
+                card.className = "cartoon-card";
+                card.onclick = () => playVideo(part.name, part.videoUrl, series.age);
+
+                card.innerHTML = `
+                    <img src="${series.img}" alt="${part.name}" class="cartoon-thumb" />
+                    <div class="cartoon-info">
+                        <div class="cartoon-name">${part.name}</div>
+                        <span class="age-badge" style="background-color: var(--accent-blue); color: white;">${part.badge}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // التمرير السلس لأول الشبكة
+            window.scrollTo({ top: 150, behavior: 'smooth' });
+        }
+
+        // العودة للرئيسية وإعادة تهيئة القائمة
+        function backToMain() {
+            const pageTitle = document.getElementById("pageTitle");
+            if (currentCategory === "الكل") pageTitle.innerText = "✨ المقترحة لك الآن";
+            else pageTitle.innerText = "🎬 قسم: " + currentCategory;
+
+            document.getElementById("searchInput").value = "";
+            renderContent();
+        }
+
+        // اختيار الأقسام من القائمة الجانبية
         function selectCategory(category, event) {
             if (event) event.preventDefault();
             
-            // تغيير فئة الـ Active في القائمة الجانبية
             document.querySelectorAll('.sidebar-link').forEach(link => {
                 link.classList.remove('active');
             });
             if (event) {
                 event.currentTarget.classList.add('active');
             } else {
-                // في حال العودة للرئيسية عن طريق الشعار
                 document.querySelector('.sidebar-link').classList.add('active');
             }
 
-            // تعيين التصنيف الحالي وإعادة بناء الصفحة
             currentCategory = category;
             
-            // تخصيص عنوان الصفحة حسب القسم
             const pageTitle = document.getElementById("pageTitle");
             if (category === "الكل") pageTitle.innerText = "✨ المقترحة لك الآن";
             else pageTitle.innerText = "🎬 قسم: " + (category === "اناشيد" ? "أناشيد الأطفال" : category === "انشطة" ? "أنشطة وتلوين" : category);
 
-            // تصفير البحث عند الانتقال لصفحة أخرى
             document.getElementById("searchInput").value = "";
-
             renderContent();
         }
 
-        // دالة البحث اللحظي أثناء الكتابة
+        // البحث اللحظي
         function handleSearch() {
             const query = document.getElementById("searchInput").value;
             renderContent(query);
         }
 
-        // تشغيل فيديو البانر الرئيسي
-        function playHeroVideo() {
-            playVideo("سلاحف النينجا - الموسم الأول", "https://www.youtube.com/embed/gLshK7p9o2E", "7-12 سنة");
-        }
-
-        // دالة فتح مشغل الفيديو المنبثق
+        // فتح نافذة الفيديو المنبثقة
         function playVideo(videoName, videoUrl, ageLimit) {
             const modal = document.getElementById("videoModal");
             const iframe = document.getElementById("videoIframe");
@@ -655,20 +752,20 @@
             document.getElementById("modalVideoName").innerText = "شاهد الآن: " + videoName;
             document.getElementById("modalVideoAge").innerText = "👶 مناسب للأعمار: " + ageLimit;
             
-            iframe.src = videoUrl + "?autoplay=1&rel=0"; // تمكين التشغيل التلقائي وإيقاف الفيديوهات المقترحة الخارجية
+            iframe.src = videoUrl + "?autoplay=1&rel=0"; 
             modal.style.display = "flex";
         }
 
-        // دالة إغلاق مشغل الفيديو لمنع الصوت من الاستمرار بالخلفية
+        // إغلاق نافذة الفيديو
         function closeVideo() {
             const modal = document.getElementById("videoModal");
             const iframe = document.getElementById("videoIframe");
             
-            iframe.src = ""; // إفراغ الرابط لقطع الفيديو والصوت فوراً
+            iframe.src = ""; 
             modal.style.display = "none";
         }
 
-        // بوابة الوالدين المؤمنة
+        // بوابة أولياء الأمور
         function openParentalLock() {
             let num1 = Math.floor(Math.random() * 10) + 1;
             let num2 = Math.floor(Math.random() * 10) + 1;
@@ -683,7 +780,7 @@
             }
         }
 
-        // البحث الصوتي التظاهري
+        // البحث الصوتي
         function startVoiceSearch() {
             alert("🎤 الميكروفون يستمع الآن للطفل... قل اسم الكرتون بصوت واضح!");
         }
