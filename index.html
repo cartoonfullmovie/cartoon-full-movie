@@ -1,350 +1,7 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>سينما الأطفال الآمنة - كرتون وبطولات</title>
-    <style>
-        /* --- الألوان والهوية البصرية --- */
-        :root {
-            --bg-dark: #0f172a; /* خلفية داكنة مريحة للعين */
-            --bg-card: #1e293b; /* لون بطاقات العرض */
-            --accent-green: #22c55e; /* أخضر فسفوري مبهج */
-            --accent-orange: #f97316; /* برتقالي حيوي */
-            --accent-blue: #3b82f6; /* أزرق نيون */
-            --text-light: #f8fafc;
-            --text-gray: #94a3b8;
-        }
-
-        /* --- التنسيق العام --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            padding-bottom: 50px;
-        }
-
-        /* --- الهيدر (شريط التنقل) --- */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 5%;
-            background-color: rgba(15, 23, 42, 0.95);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 2px solid var(--accent-blue);
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--accent-green);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background: var(--bg-card);
-            border-radius: 30px;
-            padding: 8px 15px;
-            border: 2px solid #334155;
-        }
-
-        .search-bar input {
-            background: none;
-            border: none;
-            color: var(--text-light);
-            outline: none;
-            padding-left: 10px;
-            font-size: 16px;
-        }
-
-        .voice-btn {
-            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            color: var(--accent-orange);
-            transition: transform 0.2s;
-        }
-        .voice-btn:hover {
-            transform: scale(1.2);
-        }
-
-        .parent-btn {
-            background-color: var(--accent-blue);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .parent-btn:hover {
-            background-color: #2563eb;
-            box-shadow: 0 0 15px var(--accent-blue);
-        }
-
-        /* --- البانر المتحرك الرئيسي (Hero Banner) --- */
-        .hero-banner {
-            background: linear-gradient(to top, var(--bg-dark), rgba(0,0,0,0.4)), 
-                        url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&amp;w=1200') no-repeat center/cover;
-            height: 320px;
-            display: flex;
-            align-items: flex-end;
-            padding: 30px;
-            margin-bottom: 30px;
-            border-radius: 20px;
-            border-bottom: 4px solid var(--accent-orange);
-        }
-
-        .hero-content {
-            max-width: 600px;
-        }
-
-        .hero-title {
-            font-size: 30px;
-            color: var(--text-light);
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-        }
-
-        .play-now-btn {
-            background-color: var(--accent-green);
-            color: #000;
-            font-size: 16px;
-            font-weight: bold;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .play-now-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px var(--accent-green);
-        }
-
-        /* --- تقسيم الصفحة الرئيسي (Sidebar + Main Content) --- */
-        .main-layout {
-            display: flex;
-            gap: 30px;
-            padding: 0 5%;
-            margin-bottom: 50px;
-        }
-
-        /* القائمة الجانبية اليمنى (Sidebar) */
-        .sidebar {
-            width: 280px;
-            background-color: var(--bg-card);
-            border-radius: 20px;
-            padding: 25px 20px;
-            height: fit-content;
-            border: 2px solid #334155;
-            flex-shrink: 0;
-        }
-
-        .sidebar-title {
-            font-size: 20px;
-            color: var(--accent-green);
-            margin-bottom: 20px;
-            font-weight: bold;
-            border-bottom: 2px solid #334155;
-            padding-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-        }
-
-        .sidebar-item {
-            margin-bottom: 12px;
-        }
-
-        .sidebar-link {
-            color: var(--text-light);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 15px;
-            border-radius: 12px;
-            font-weight: bold;
-            transition: 0.2s;
-            background-color: rgba(255, 255, 255, 0.02);
-        }
-
-        .sidebar-link:hover, .sidebar-link.active {
-            background-color: var(--accent-blue);
-            color: white;
-            transform: translateX(-5px);
-        }
-
-        /* المحتوى الرئيسي الأيسر */
-        .content-area {
-            flex-grow: 1;
-        }
-
-        .section-title {
-            font-size: 24px;
-            margin-bottom: 20px;
-            border-right: 5px solid var(--accent-green);
-            padding-right: 15px;
-        }
-
-        /* شبكة عرض كروت الكرتون (Grid) */
-        .grid-layout {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .cartoon-card {
-            background-color: var(--bg-card);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-
-        .cartoon-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--accent-orange);
-            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.3);
-        }
-
-        .cartoon-thumb {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            background-color: #334155;
-        }
-
-        .cartoon-info {
-            padding: 12px;
-            text-align: center;
-        }
-
-        .cartoon-name {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .age-badge {
-            display: inline-block;
-            background-color: rgba(249, 115, 22, 0.2);
-            color: var(--accent-orange);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        /* --- ركن الأنشطة التفاعلية --- */
-        .activities-banner {
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            border-radius: 25px;
-            padding: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        .activities-text h3 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .activities-text p {
-            color: #bfdbfe;
-        }
-
-        .download-btn {
-            background-color: var(--accent-orange);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 20px;
-            font-weight: bold;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .download-btn:hover {
-            background-color: #ea580c;
-            box-shadow: 0 0 15px rgba(249, 115, 22, 0.6);
-        }
-
-        /* --- التجاوب مع الشاشات (Responsive) --- */
-        @media (max-width: 992px) {
-            .main-layout {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-            }
-        }
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .hero-banner {
-                height: 250px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <div class="logo">
-            <span>🎨</span> سينما كرتون الآمنة
-        </div>
-        
-        <div class="search-bar">
-            <input type="text" placeholder="ابحث عن كرتونك المفضل..." />
-            <button class="voice-btn" onclick="startVoiceSearch()" title="ابحث بصوتك">🎤</button>
-        </div>
-
-        <button class="parent-btn" onclick="openParentalLock()">🔑 بوابة الوالدين</button>
-    </header>
-
-    <div class="main-layout">
-        
-        <aside class="sidebar">
-            <div class="sidebar-title">
-                <span>📁</span> تصنيفات السينما
-            </div>
+<aside class="sidebar">
             <ul class="sidebar-menu">
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link active" onclick="selectCategory('مدبلج')">🎬 أفلام كرتون مدبلجة</a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link" onclick="selectCategory('مترجم')">🍿 أفلام كرتون مترجمة</a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link" onclick="selectCategory('تعليمي')">📚 كرتون تعليمي هادف</a>
+                    <a href="#" class="sidebar-link active" onclick="selectCategory('الكل')">🏠 الصفحة الرئيسية</a>
                 </li>
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link" onclick="selectCategory('مسلسلات')">📺 مسلسلات مغامرات</a>
@@ -364,15 +21,32 @@
                 <div class="hero-content">
                     <h1 class="hero-title">سلاحف النينجا - الموسم الأول</h1>
                     <p style="margin-bottom: 20px; color: var(--text-gray);">شاهد مغامرات ليو، راف، دوني، ومايكي الشيقة ضد قوى الشريدر في شوارع نيويورك!</p>
-                    <a href="#play" class="play-now-btn">▶ ابدأ المشاهدة الآن</a>
+                    <a href="#play" class="play-now-btn" onclick="playNinjaTurtles()">▶ ابدأ المشاهدة الآن</a>
                 </div>
+            </section>
+
+            <section class="video-player-section" id="videoPlayerSection" style="display: none; margin: 30px 20px; padding: 20px; background-color: #1e1e1e; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 id="playingTitle" style="color: #00ff66; margin: 0;">🎥 الآن يعرض: سلاحف النينجا - الحلقة 1</h3>
+                    <button onclick="closePlayer()" style="background: #ff3333; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">إغلاق المشغل ✖</button>
+                </div>
+                
+                <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; background: #000;">
+                    <iframe id="videoIframe" src="" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
+                </div>
+
+                <div class="episodes-list" style="margin-top: 15px; display: flex; gap: 10px; overflow-x: auto; padding: 10px 0;">
+                    <button onclick="changeEpisode('الحلقة 1: البداية', 'رابط_تضمين_الحلقة_1_هنا')" style="background: #333; color: white; border: 1px solid #00ff66; padding: 10px 15px; border-radius: 8px; cursor: pointer; white-space: nowrap;">الحلقة 1</button>
+                    <button onclick="changeEpisode('الحلقة 2: مواجهة شريدر', 'رابط_تضمين_الحلقة_2_هنا')" style="background: #333; color: white; border: 1px solid #00ff66; padding: 10px 15px; border-radius: 8px; cursor: pointer; white-space: nowrap;">الحلقة 2</button>
+                    <button onclick="changeEpisode('الحلقة 3: خطر كرانج', 'رابط_تضمين_الحلقة_3_هنا')" style="background: #333; color: white; border: 1px solid #00ff66; padding: 10px 15px; border-radius: 8px; cursor: pointer; white-space: nowrap;">الحلقة 3</button>
+                    </div>
             </section>
 
             <section class="section-container">
                 <h2 class="section-title">✨ المقترحة لك الآن</h2>
                 <div class="grid-layout">
                     
-                    <div class="cartoon-card" id="play" onclick="playVideo('سلاحف النينجا')">
+                    <div class="cartoon-card" id="play" onclick="playNinjaTurtles()">
                         <img src="https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?q=80&amp;w=300" alt="سلاحف النينجا" class="cartoon-thumb" />
                         <div class="cartoon-info">
                             <div class="cartoon-name">سلاحف النينجا</div>
@@ -421,17 +95,40 @@
     <script>
         // تفعيل التنقل بين التصنيفات بالقائمة الجانبية
         function selectCategory(category) {
-            // إزالة التحديد النشط من جميع العناصر
-            document.querySelectorAll('.sidebar-link').forEach(link =&gt; {
+            document.querySelectorAll('.sidebar-link').forEach(link => {
                 link.classList.remove('active');
             });
-            // تحديد العنصر الحالي كنشط
             event.currentTarget.classList.add('active');
             alert("تم الانتقال إلى قسم: " + event.currentTarget.innerText);
         }
 
+        // دالة تشغيل فيديوهات المقترحة العامة برمز تنبيهي
         function playVideo(videoName) {
             alert("🎬 جاري تشغيل عرض: " + videoName + " بأمان وبدون إعلانات!");
+        }
+
+        // دالة مخصصة لفتح مشغل حلقات سلاحف النينجا
+        function playNinjaTurtles() {
+            let playerSection = document.getElementById('videoPlayerSection');
+            playerSection.style.display = 'block'; // إظهار المشغل
+            
+            // تعيين الحلقة الأولى كبداية تشغيل افتراضية (استبدل الرابط برابط تضمين الحلقة الحقيقي)
+            changeEpisode('الحلقة 1: البداية', 'https://www.youtube.com/embed/tgbNymZ7vqY'); 
+            
+            // تمرير الشاشة تلقائياً إلى المشغل لكي ينتبه الطفل له
+            playerSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // دالة لتغيير الحلقة المعروضة داخل المشغل
+        function changeEpisode(episodeName, videoUrl) {
+            document.getElementById('playingTitle').innerText = "🎥 الآن يعرض: سلاحف النينجا - " + episodeName;
+            document.getElementById('videoIframe').src = videoUrl;
+        }
+
+        // دالة إغلاق المشغل
+        function closePlayer() {
+            document.getElementById('videoPlayerSection').style.display = 'none';
+            document.getElementById('videoIframe').src = ""; // إيقاف تشغيل الفيديو عند الإغلاق
         }
 
         function openParentalLock() {
@@ -452,6 +149,3 @@
             alert("🎤 الميكروفون يستمع الآن للطفل... قل اسم الكرتون بصوت واضح!");
         }
     </script>
-
-</body>
-</html>
