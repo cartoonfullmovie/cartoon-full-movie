@@ -24,6 +24,10 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             background-color: var(--bg-dark);
             color: var(--text-light);
@@ -50,6 +54,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            cursor: pointer;
         }
 
         .search-bar {
@@ -100,7 +105,7 @@
         /* --- البانر المتحرك الرئيسي (Hero Banner) --- */
         .hero-banner {
             background: linear-gradient(to top, var(--bg-dark), rgba(0,0,0,0.4)), 
-                        url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&amp;w=1200') no-repeat center/cover;
+                        url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1200') no-repeat center/cover;
             height: 320px;
             display: flex;
             align-items: flex-end;
@@ -223,6 +228,9 @@
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
             border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .cartoon-card:hover {
@@ -257,6 +265,7 @@
             border-radius: 12px;
             font-size: 11px;
             font-weight: bold;
+            margin-top: 5px;
         }
 
         /* --- ركن الأنشطة التفاعلية --- */
@@ -295,6 +304,77 @@
             box-shadow: 0 0 15px rgba(249, 115, 22, 0.6);
         }
 
+        /* --- نافذة الفيديو المنبثقة (Video Modal) --- */
+        .video-modal {
+            display: none; /* مخفية افتراضياً */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--bg-card);
+            border-radius: 25px;
+            width: 100%;
+            max-width: 800px;
+            border: 2px solid var(--accent-blue);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 30px var(--accent-blue);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: 0.2s;
+            z-index: 10;
+        }
+
+        .close-modal:hover {
+            color: var(--accent-orange);
+            transform: scale(1.2);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* أبعاد عرض الفيديو 16:9 */
+            height: 0;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .modal-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* رسالة عدم وجود نتائج */
+        .no-results {
+            text-align: center;
+            font-size: 18px;
+            color: var(--text-gray);
+            grid-column: 1 / -1;
+            padding: 40px;
+        }
+
         /* --- التجاوب مع الشاشات (Responsive) --- */
         @media (max-width: 992px) {
             .main-layout {
@@ -318,12 +398,12 @@
 <body>
 
     <header>
-        <div class="logo">
+        <div class="logo" onclick="selectCategory('الكل')">
             <span>🎨</span> سينما كرتون الآمنة
         </div>
         
         <div class="search-bar">
-            <input type="text" placeholder="ابحث عن كرتونك المفضل..." />
+            <input type="text" id="searchInput" oninput="handleSearch()" placeholder="ابحث عن كرتونك المفضل..." />
             <button class="voice-btn" onclick="startVoiceSearch()" title="ابحث بصوتك">🎤</button>
         </div>
 
@@ -338,102 +418,257 @@
             </div>
             <ul class="sidebar-menu">
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link active" onclick="selectCategory('مدبلج')">🎬 أفلام كرتون مدبلجة</a>
+                    <a href="#" class="sidebar-link active" onclick="selectCategory('الكل', event)">🏠 كل العروض</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link" onclick="selectCategory('مترجم')">🍿 أفلام كرتون مترجمة</a>
+                    <a href="#" class="sidebar-link" onclick="selectCategory('مدبلج', event)">🎬 أفلام كرتون مدبلجة</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link" onclick="selectCategory('تعليمي')">📚 كرتون تعليمي هادف</a>
+                    <a href="#" class="sidebar-link" onclick="selectCategory('مترجم', event)">🍿 أفلام كرتون مترجمة</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link" onclick="selectCategory('مسلسلات')">📺 مسلسلات مغامرات</a>
+                    <a href="#" class="sidebar-link" onclick="selectCategory('تعليمي', event)">📚 كرتون تعليمي هادف</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link" onclick="selectCategory('اناشيد')">🎵 أناشيد وأغاني أطفال</a>
+                    <a href="#" class="sidebar-link" onclick="selectCategory('مسلسلات', event)">📺 مسلسلات مغامرات</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link" onclick="selectCategory('انشطة')">✂️ أنشطة وتلوين</a>
+                    <a href="#" class="sidebar-link" onclick="selectCategory('اناشيد', event)">🎵 أناشيد وأغاني أطفال</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link" onclick="selectCategory('انشطة', event)">✂️ أنشطة وتلوين ورسومات</a>
                 </li>
             </ul>
         </aside>
 
         <main class="content-area">
             
-            <section class="hero-banner">
+            <section class="hero-banner" id="heroSection">
                 <div class="hero-content">
-                    <h1 class="hero-title">سلاحف النينجا - الموسم الأول</h1>
-                    <p style="margin-bottom: 20px; color: var(--text-gray);">شاهد مغامرات ليو، راف، دوني، ومايكي الشيقة ضد قوى الشريدر في شوارع نيويورك!</p>
-                    <a href="#play" class="play-now-btn">▶ ابدأ المشاهدة الآن</a>
+                    <h1 class="hero-title" id="heroTitle">سلاحف النينجا - الموسم الأول</h1>
+                    <p id="heroDesc" style="margin-bottom: 20px; color: var(--text-gray);">شاهد مغامرات ليو، راف، دوني، ومايكي الشيقة ضد قوى الشريدر في شوارع نيويورك!</p>
+                    <button class="play-now-btn" onclick="playHeroVideo()">▶ ابدأ المشاهدة الآن</button>
                 </div>
             </section>
 
             <section class="section-container">
-                <h2 class="section-title">✨ المقترحة لك الآن</h2>
-                <div class="grid-layout">
-                    
-                    <div class="cartoon-card" id="play" onclick="playVideo('سلاحف النينجا')">
-                        <img src="https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?q=80&amp;w=300" alt="سلاحف النينجا" class="cartoon-thumb" />
-                        <div class="cartoon-info">
-                            <div class="cartoon-name">سلاحف النينجا</div>
-                            <span class="age-badge">7-12 سنة</span>
-                        </div>
+                <h2 class="section-title" id="pageTitle">✨ المقترحة لك الآن</h2>
+                <div class="grid-layout" id="cardsGrid">
                     </div>
-
-                    <div class="cartoon-card" onclick="playVideo('رحلة الفضاء العجيبة')">
-                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&amp;w=300" alt="مغامري الفضاء" class="cartoon-thumb" />
-                        <div class="cartoon-info">
-                            <div class="cartoon-name">رحلة الفضاء العجيبة</div>
-                            <span class="age-badge">3-6 سنوات</span>
-                        </div>
-                    </div>
-
-                    <div class="cartoon-card" onclick="playVideo('مدرسة الحروف والعلوم')">
-                        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&amp;w=300" alt="مدرسة الحروف" class="cartoon-thumb" />
-                        <div class="cartoon-info">
-                            <div class="cartoon-name">مدرسة الحروف والعلوم</div>
-                            <span class="age-badge">3-6 سنوات</span>
-                        </div>
-                    </div>
-
-                    <div class="cartoon-card" onclick="playVideo('الأرنب الكوميدي الضاحك')">
-                        <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&amp;w=300" alt="الأرنب المشاكس" class="cartoon-thumb" />
-                        <div class="cartoon-info">
-                            <div class="cartoon-name">الأرنب الكوميدي الضاحك</div>
-                            <span class="age-badge">جميع الأعمار</span>
-                        </div>
-                    </div>
-
-                </div>
             </section>
 
             <section class="activities-banner">
                 <div class="activities-text">
                     <h3>✂️ ركن الأنشطة اليدوية والتلوين!</h3>
-                    <p>اطبع قناع سلحفاتك المفضلة (أزرق، أحمر، برتقالي، بنفسجي) واصنع قناعك الخاص بالمنزل.</p>
+                    <p>اطبع أقنعة الأبطال المفضلة والرسومات التعليمية الرائعة لتقضوا وقتاً ممتعاً بالمنزل.</p>
                 </div>
-                <a href="#" class="download-btn" onclick="alert('جاري تحميل كراسة الأنشطة والتلوين للطباعة المنزلية!')">📥 تحميل الأنشطة وطباعتها</a>
+                <a href="#" class="download-btn" onclick="alert('جاري تحميل كراسة الأنشطة والتلوين الكاملة للطباعة المنزلية!')">📥 تحميل الأنشطة وطباعتها</a>
             </section>
 
         </main>
     </div>
 
+    <div class="video-modal" id="videoModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeVideo()">&times;</span>
+            <div class="video-wrapper">
+                <iframe id="videoIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="modal-info">
+                <h3 id="modalVideoName" style="font-size: 20px; color: var(--accent-green); margin-bottom: 5px;">اسم الكرتون</h3>
+                <p id="modalVideoAge" style="color: var(--accent-orange); font-weight: bold; font-size: 14px;">العمر المناسب</p>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // تفعيل التنقل بين التصنيفات بالقائمة الجانبية
-        function selectCategory(category) {
-            // إزالة التحديد النشط من جميع العناصر
-            document.querySelectorAll('.sidebar-link').forEach(link =&gt; {
+        // قاعدة بيانات المحتوى الداخلي للموقع (صفحات مدمجة في صفحة واحدة)
+        const libraryData = [
+            {
+                id: 1,
+                name: "سلاحف النينجا",
+                category: "مسلسلات",
+                secondaryCategory: "مدبلج",
+                age: "7-12 سنة",
+                img: "https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?q=80&w=300",
+                videoUrl: "https://www.youtube.com/embed/gLshK7p9o2E" // رابط فيديو كمثال
+            },
+            {
+                id: 2,
+                name: "رحلة الفضاء العجيبة",
+                category: "تعليمي",
+                secondaryCategory: "مدبلج",
+                age: "3-6 سنوات",
+                img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=300",
+                videoUrl: "https://www.youtube.com/embed/fD14S9A_mlo"
+            },
+            {
+                id: 3,
+                name: "مدرسة الحروف والعلوم",
+                category: "تعليمي",
+                secondaryCategory: "الكل",
+                age: "3-6 سنوات",
+                img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=300",
+                videoUrl: "https://www.youtube.com/embed/S_7iWofBfhs"
+            },
+            {
+                id: 4,
+                name: "الأرنب الكوميدي الضاحك",
+                category: "مترجم",
+                secondaryCategory: "مسلسلات",
+                age: "جميع الأعمار",
+                img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=300",
+                videoUrl: "https://www.youtube.com/embed/XgS8yR8_hO0"
+            },
+            {
+                id: 5,
+                name: "أغنية الأرقام والحيوانات",
+                category: "اناشيد",
+                secondaryCategory: "الكل",
+                age: "3-6 سنوات",
+                img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=300",
+                videoUrl: "https://www.youtube.com/embed/pT79K0M2gZ0"
+            },
+            {
+                id: 6,
+                name: "أنشودة النظافة الجميلة",
+                category: "اناشيد",
+                secondaryCategory: "الكل",
+                age: "جميع الأعمار",
+                img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=300",
+                videoUrl: "https://www.youtube.com/embed/LgRGo8G-2Zg"
+            },
+            {
+                id: 7,
+                name: "تلوين ورسم قناع السلحفاة",
+                category: "انشطة",
+                secondaryCategory: "الكل",
+                age: "جميع الأعمار",
+                img: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=300",
+                isDownloadable: true // وسم خاص للأنشطة
+            },
+            {
+                id: 8,
+                name: "نشاط قص ولصق أشكال الفضاء",
+                category: "انشطة",
+                secondaryCategory: "الكل",
+                age: "5-10 سنوات",
+                img: "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?q=80&w=300",
+                isDownloadable: true
+            }
+        ];
+
+        // المتغيرات العامة للتحكم بالصفحة الحالية
+        let currentCategory = "الكل";
+
+        // تشغيل البداية لعرض كافة الكروت
+        window.onload = function() {
+            renderContent();
+        };
+
+        // دالة إنشاء وعرض البطاقات بناءً على الفلترة والبحث اللحظي
+        function renderContent(searchQuery = "") {
+            const grid = document.getElementById("cardsGrid");
+            grid.innerHTML = ""; // مسح الشبكة الحالية
+
+            // فلترة البيانات بناءً على التصنيف المختار وكلمة البحث
+            const filteredData = libraryData.filter(item => {
+                const matchesCategory = (currentCategory === "الكل" || item.category === currentCategory || item.secondaryCategory === currentCategory);
+                const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            // عرض رسالة إذا لم تكن هناك نتائج مطابقة للبحث
+            if (filteredData.length === 0) {
+                grid.innerHTML = `<div class="no-results">🔍 لم نجد أي عروض مطابقة لبحثك.. جرب كلمة أخرى ممتعة!</div>`;
+                return;
+            }
+
+            // إنشاء البطاقات وعرضها داخل الشبكة
+            filteredData.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "cartoon-card";
+                
+                // تحديد الحدث المناسب للبطاقة (مشاهدة فيديو أم تحميل ملف تلوين)
+                if (item.isDownloadable) {
+                    card.onclick = () => alert("📥 جاري تحميل ورقة نشاط: " + item.name + " جاهزة للطباعة المنزلية!");
+                } else {
+                    card.onclick = () => playVideo(item.name, item.videoUrl, item.age);
+                }
+
+                card.innerHTML = `
+                    <img src="${item.img}" alt="${item.name}" class="cartoon-thumb" />
+                    <div class="cartoon-info">
+                        <div class="cartoon-name">${item.name}</div>
+                        <span class="age-badge">${item.isDownloadable ? '✂️ نشاط ورقي' : item.age}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // دالة تصفح الأقسام والصفحات عبر الروابط الجانبية
+        function selectCategory(category, event) {
+            if (event) event.preventDefault();
+            
+            // تغيير فئة الـ Active في القائمة الجانبية
+            document.querySelectorAll('.sidebar-link').forEach(link => {
                 link.classList.remove('active');
             });
-            // تحديد العنصر الحالي كنشط
-            event.currentTarget.classList.add('active');
-            alert("تم الانتقال إلى قسم: " + event.currentTarget.innerText);
+            if (event) {
+                event.currentTarget.classList.add('active');
+            } else {
+                // في حال العودة للرئيسية عن طريق الشعار
+                document.querySelector('.sidebar-link').classList.add('active');
+            }
+
+            // تعيين التصنيف الحالي وإعادة بناء الصفحة
+            currentCategory = category;
+            
+            // تخصيص عنوان الصفحة حسب القسم
+            const pageTitle = document.getElementById("pageTitle");
+            if (category === "الكل") pageTitle.innerText = "✨ المقترحة لك الآن";
+            else pageTitle.innerText = "🎬 قسم: " + (category === "اناشيد" ? "أناشيد الأطفال" : category === "انشطة" ? "أنشطة وتلوين" : category);
+
+            // تصفير البحث عند الانتقال لصفحة أخرى
+            document.getElementById("searchInput").value = "";
+
+            renderContent();
         }
 
-        function playVideo(videoName) {
-            alert("🎬 جاري تشغيل عرض: " + videoName + " بأمان وبدون إعلانات!");
+        // دالة البحث اللحظي أثناء الكتابة
+        function handleSearch() {
+            const query = document.getElementById("searchInput").value;
+            renderContent(query);
         }
 
+        // تشغيل فيديو البانر الرئيسي
+        function playHeroVideo() {
+            playVideo("سلاحف النينجا - الموسم الأول", "https://www.youtube.com/embed/gLshK7p9o2E", "7-12 سنة");
+        }
+
+        // دالة فتح مشغل الفيديو المنبثق
+        function playVideo(videoName, videoUrl, ageLimit) {
+            const modal = document.getElementById("videoModal");
+            const iframe = document.getElementById("videoIframe");
+            
+            document.getElementById("modalVideoName").innerText = "شاهد الآن: " + videoName;
+            document.getElementById("modalVideoAge").innerText = "👶 مناسب للأعمار: " + ageLimit;
+            
+            iframe.src = videoUrl + "?autoplay=1&rel=0"; // تمكين التشغيل التلقائي وإيقاف الفيديوهات المقترحة الخارجية
+            modal.style.display = "flex";
+        }
+
+        // دالة إغلاق مشغل الفيديو لمنع الصوت من الاستمرار بالخلفية
+        function closeVideo() {
+            const modal = document.getElementById("videoModal");
+            const iframe = document.getElementById("videoIframe");
+            
+            iframe.src = ""; // إفراغ الرابط لقطع الفيديو والصوت فوراً
+            modal.style.display = "none";
+        }
+
+        // بوابة الوالدين المؤمنة
         function openParentalLock() {
             let num1 = Math.floor(Math.random() * 10) + 1;
             let num2 = Math.floor(Math.random() * 10) + 1;
@@ -448,6 +683,7 @@
             }
         }
 
+        // البحث الصوتي التظاهري
         function startVoiceSearch() {
             alert("🎤 الميكروفون يستمع الآن للطفل... قل اسم الكرتون بصوت واضح!");
         }
