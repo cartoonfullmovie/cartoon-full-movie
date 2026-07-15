@@ -262,7 +262,7 @@
             box-shadow: 0 10px 25px rgba(249, 115, 22, 0.3);
         }
 
-        /* شارة تدل على أن الكرتون عبارة عن سلسلة أجزاء */
+        /* شارة السلسلة */
         .series-badge {
             position: absolute;
             top: 10px;
@@ -382,6 +382,48 @@
             transform: scale(1.2);
         }
 
+        /* --- تصميم منطقة السيرفرات المتعددة --- */
+        .servers-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background-color: #111827;
+            border-bottom: 1px solid #334155;
+            flex-wrap: wrap;
+        }
+
+        .server-label {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-left: 5px;
+        }
+
+        .server-btn {
+            background-color: #1e293b;
+            color: var(--text-light);
+            border: 1px solid #475569;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .server-btn.active {
+            background-color: var(--accent-green);
+            color: #000;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+        }
+
+        .server-btn:hover:not(.active) {
+            background-color: #334155;
+            border-color: var(--accent-blue);
+        }
+
         .video-wrapper {
             position: relative;
             padding-bottom: 56.25%; 
@@ -410,7 +452,7 @@
             padding: 40px;
         }
 
-        /* --- 🌟 تصميم مساعد الكرتون التفاعلي في الزاوية 🌟 --- */
+        /* --- تصميم مساعد الكرتون التفاعلي في الزاوية --- */
         .interactive-assistant {
             position: fixed;
             bottom: 20px;
@@ -422,7 +464,6 @@
             gap: 8px;
         }
 
-        /* حاوية دائرية للفيديو لتشبه وجوه المساعدين الأذكياء */
         .assistant-avatar {
             width: 120px;
             height: 120px;
@@ -445,7 +486,6 @@
             object-fit: cover;
         }
 
-        /* فقاعة نصية تظهر فوق رأس الشخصية تشرح مهمتها */
         .assistant-bubble {
             background-color: var(--bg-card);
             color: var(--text-light);
@@ -496,7 +536,6 @@
             .hero-banner {
                 height: 250px;
             }
-            /* جعل المساعد أصغر على الهواتف */
             .assistant-avatar {
                 width: 90px;
                 height: 90px;
@@ -587,22 +626,30 @@
         </main>
     </div>
 
-    <!-- 🌟 المساعد الكرتوني التفاعلي في زاوية الشاشة 🌟 -->
+    <!-- المساعد الكرتوني التفاعلي في زاوية الشاشة -->
     <div class="interactive-assistant" id="interactiveAssistant">
         <div class="assistant-bubble" id="assistantBubble">اضغط عليّ لأرحب بك! 👋</div>
         <div class="assistant-avatar" onclick="toggleAssistantSpeech()">
-            <!-- فيديو الشخصية الكرتونية المتحركة -->
-            <video id="assistantVideo" playsinline loop>
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-funny-cartoon-monster-talking-and-waving-40156-large.mp4" type="video/mp4">
+            <video id="assistantVideo" playsinline loop style="width: 100%; height: 100%; object-fit: cover;">
+                <source src="cartoon.mp4" type="video/mp4">
                 متصفحك لا يدعم تشغيل هذا الفيديو.
             </video>
         </div>
     </div>
 
-    <!-- مشغل الفيديو -->
+    <!-- مشغل الفيديو المتطور بالسيرفرات -->
     <div class="video-modal" id="videoModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeVideo()">&times;</span>
+            
+            <!-- شريط اختيار السيرفرات المتعددة -->
+            <div class="servers-container" id="serversContainer">
+                <span class="server-label">🚀 اختر سيرفر التشغيل:</span>
+                <div id="serversList" style="display: inline-flex; gap: 8px;">
+                    <!-- أزرار السيرفرات المتاحة للحلقة المفتوحة تتولد هنا تلقائياً -->
+                </div>
+            </div>
+
             <div class="video-wrapper">
                 <iframe id="videoIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
@@ -615,6 +662,7 @@
 
     <!-- الجافا سكريبت المطورة والجاهزة -->
     <script>
+        // 🌟 قاعدة بيانات الكرتون الشاملة: تم تحويل كافة الفيديوهات رسمياً لنظام السيرفرات المتعددة 🌟
         const libraryData = [
             {
                 id: 1,
@@ -625,10 +673,30 @@
                 img: "https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?q=80&w=300",
                 isSeries: true, 
                 parts: [
-                    // هنا تم إدراج رابط الحلقة الأول ديلى موشن بعد تحويله بنجاح لرابط تضمين (Embed) ليعمل بسلاسة
-                    { name: "سلاحف النينجا - الموسم الأول (الحلقة 1)", videoUrl: "https://www.dailymotion.com/video/xap685u", badge: "الموسم 1" },
-                    { name: "سلاحف النينجا - الموسم الثاني", videoUrl: "https://www.youtube.com/embed/gLshK7p9o2E", badge: "الموسم 2" },
-                    { name: "فيلم سلاحف النينجا: مغامرة الفضاء", videoUrl: "https://www.youtube.com/embed/fD14S9A_mlo", badge: "فيلم مميز" }
+                    { 
+                        name: "سلاحف النينجا - الموسم الأول (الحلقة 1)", 
+                        badge: "الموسم 1",
+                        servers: [
+                            { name: "ديلي موشن 📺", url: "https://www.dailymotion.com/embed/video/xap685u" },
+                            { name: "فيسبوك 👥", url: "https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/share/v/1DVtw7sjyG/&show_text=0" }
+                        ]
+                    },
+                    { 
+                        name: "سلاحف النينجا - الموسم الثاني", 
+                        badge: "الموسم 2",
+                        servers: [
+                            { name: "سيرفر 1 🎥", url: "https://www.youtube.com/embed/gLshK7p9o2E" },
+                            { name: "سيرفر الاحتياط 🔄", url: "https://www.youtube.com/embed/fD14S9A_mlo" }
+                        ]
+                    },
+                    { 
+                        name: "فيلم سلاحف النينجا: مغامرة الفضاء", 
+                        badge: "فيلم مميز",
+                        servers: [
+                            { name: "سيرفر أساسي 🎥", url: "https://www.youtube.com/embed/fD14S9A_mlo" },
+                            { name: "سيرفر خارجي 🌐", url: "https://www.youtube.com/embed/S_7iWofBfhs" }
+                        ]
+                    }
                 ]
             },
             {
@@ -640,8 +708,22 @@
                 img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=300",
                 isSeries: true,
                 parts: [
-                    { name: "رحلة الفضاء - الحلقة الأولى: كوكب المريخ", videoUrl: "https://www.youtube.com/embed/fD14S9A_mlo", badge: "الحلقة 1" },
-                    { name: "رحلة الفضاء - الحلقة الثانية: حلقة زحل اللامعة", videoUrl: "https://www.youtube.com/embed/S_7iWofBfhs", badge: "الحلقة 2" }
+                    { 
+                        name: "رحلة الفضاء - الحلقة الأولى: كوكب المريخ", 
+                        badge: "الحلقة 1",
+                        servers: [
+                            { name: "سيرفر 1 🚀", url: "https://www.youtube.com/embed/fD14S9A_mlo" },
+                            { name: "سيرفر 2 🛰️", url: "https://www.youtube.com/embed/S_7iWofBfhs" }
+                        ]
+                    },
+                    { 
+                        name: "رحلة الفضاء - الحلقة الثانية: حلقة زحل اللامعة", 
+                        badge: "الحلقة 2",
+                        servers: [
+                            { name: "سيرفر الأساسي 🌌", url: "https://www.youtube.com/embed/S_7iWofBfhs" },
+                            { name: "سيرفر السحاب ☁️", url: "https://www.youtube.com/embed/fD14S9A_mlo" }
+                        ]
+                    }
                 ]
             },
             {
@@ -651,7 +733,10 @@
                 secondaryCategory: "الكل",
                 age: "3-6 سنوات",
                 img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=300",
-                videoUrl: "https://www.youtube.com/embed/S_7iWofBfhs"
+                servers: [
+                    { name: "سيرفر يوتيوب 🎒", url: "https://www.youtube.com/embed/S_7iWofBfhs" },
+                    { name: "سيرفر المنصة التعليمية 🏫", url: "https://www.youtube.com/embed/pT79K0M2gZ0" }
+                ]
             },
             {
                 id: 4,
@@ -660,7 +745,10 @@
                 secondaryCategory: "مسلسلات",
                 age: "جميع الأعمار",
                 img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=300",
-                videoUrl: "https://www.youtube.com/embed/XgS8yR8_hO0"
+                servers: [
+                    { name: "سيرفر كوميدي 1 🥕", url: "https://www.youtube.com/embed/XgS8yR8_hO0" },
+                    { name: "سيرفر كوميدي 2 🎭", url: "https://www.youtube.com/embed/gLshK7p9o2E" }
+                ]
             },
             {
                 id: 5,
@@ -669,7 +757,10 @@
                 secondaryCategory: "الكل",
                 age: "3-6 سنوات",
                 img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=300",
-                videoUrl: "https://www.youtube.com/embed/pT79K0M2gZ0"
+                servers: [
+                    { name: "سيرفر نغمات 🎹", url: "https://www.youtube.com/embed/pT79K0M2gZ0" },
+                    { name: "سيرفر ألحان 🎼", url: "https://www.youtube.com/embed/LgRGo8G-2Zg" }
+                ]
             },
             {
                 id: 6,
@@ -678,7 +769,10 @@
                 secondaryCategory: "الكل",
                 age: "جميع الأعمار",
                 img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=300",
-                videoUrl: "https://www.youtube.com/embed/LgRGo8G-2Zg"
+                servers: [
+                    { name: "سيرفر نظافة 🫧", url: "https://www.youtube.com/embed/LgRGo8G-2Zg" },
+                    { name: "سيرفر حركي 🏃", url: "https://www.youtube.com/embed/pT79K0M2gZ0" }
+                ]
             },
             {
                 id: 7,
@@ -702,26 +796,27 @@
 
         let currentCategory = "الكل";
         let isInsideSeries = false;
+        let activeServers = []; 
 
         window.onload = function() {
             renderContent();
-            
-            // إظهار ترحيب تلقائي بعد ثانيتين من فتح الصفحة
             setTimeout(() => {
                 document.getElementById("assistantBubble").innerText = "يا مرحباً بك يا بطل! 🍿";
             }, 2000);
         };
 
-        // دالة التحكم بتشغيل وإيقاف المساعد الكرتوني
         function toggleAssistantSpeech() {
             const video = document.getElementById("assistantVideo");
             const bubble = document.getElementById("assistantBubble");
             
             if (video.paused) {
-                video.play();
-                bubble.innerText = "أنا المساعد السحري! استمتع بالمشاهدة! 🎉";
+                video.muted = false;
+                video.play().then(() => {
+                    bubble.innerText = "أهلاً بك! أنا صديقك المساعد السحري 🌟";
+                }).catch(error => {
+                    console.log("المتصفح حظر الصوت التلقائي: " + error);
+                });
                 
-                // إيقاف الحركة تلقائياً بعد 8 ثوانٍ لتوفير موارد المتصفح
                 setTimeout(() => {
                     video.pause();
                     bubble.innerText = "اضغط عليّ مجدداً لأتحدث! 👍";
@@ -760,7 +855,7 @@
                 } else if (item.isDownloadable) {
                     card.onclick = () => alert("📥 جاري تحميل ورقة نشاط: " + item.name + " جاهزة للطباعة المنزلية!");
                 } else {
-                    card.onclick = () => playVideo(item.name, item.videoUrl, item.age);
+                    card.onclick = () => playVideo(item.name, item.servers, item.age);
                 }
 
                 const badgeHTML = item.isSeries ? `<span class="series-badge">🎬 سلسلة أجزاء</span>` : '';
@@ -792,7 +887,7 @@
             series.parts.forEach(part => {
                 const card = document.createElement("div");
                 card.className = "cartoon-card";
-                card.onclick = () => playVideo(part.name, part.videoUrl, series.age);
+                card.onclick = () => playVideo(part.name, part.servers, series.age);
 
                 card.innerHTML = `
                     <img src="${series.img}" alt="${part.name}" class="cartoon-thumb" />
@@ -843,15 +938,47 @@
             renderContent(query);
         }
 
-        function playVideo(videoName, videoUrl, ageLimit) {
+        // 🌟 دالة تشغيل الفيديو الشاملة للسيرفرات المتعددة 🌟
+        function playVideo(videoName, servers, ageLimit) {
             const modal = document.getElementById("videoModal");
             const iframe = document.getElementById("videoIframe");
+            const serversList = document.getElementById("serversList");
             
             document.getElementById("modalVideoName").innerText = "شاهد الآن: " + videoName;
             document.getElementById("modalVideoAge").innerText = "👶 مناسب للأعمار: " + ageLimit;
             
-            iframe.src = videoUrl + "?autoplay=1&rel=0"; 
+            activeServers = servers;
+            serversList.innerHTML = "";
+
+            if (servers && servers.length > 0) {
+                // توليد الأزرار لجميع السيرفرات المتوفرة تلقائياً
+                servers.forEach((server, index) => {
+                    const btn = document.createElement("button");
+                    btn.className = "server-btn" + (index === 0 ? " active" : "");
+                    btn.innerText = server.name;
+                    btn.onclick = () => changeServer(index, btn);
+                    serversList.appendChild(btn);
+                });
+
+                // تشغيل السيرفر الأول كخيار افتراضي تلقائي
+                iframe.src = servers[0].url + (servers[0].url.includes("?") ? "&" : "?") + "autoplay=1&rel=0";
+            } else {
+                serversList.innerHTML = "<span style='color: var(--accent-orange); font-size:12px;'>عذراً، لا يوجد سيرفر تشغيل متاح حالياً.</span>";
+                iframe.src = "";
+            }
+
             modal.style.display = "flex";
+        }
+
+        // دالة التبديل السلس والسريع بين السيرفرات المتاحة
+        function changeServer(index, clickedBtn) {
+            const iframe = document.getElementById("videoIframe");
+            
+            document.querySelectorAll(".server-btn").forEach(btn => btn.classList.remove("active"));
+            clickedBtn.classList.add("active");
+
+            const selectedServer = activeServers[index];
+            iframe.src = selectedServer.url + (selectedServer.url.includes("?") ? "&" : "?") + "autoplay=1&rel=0";
         }
 
         function closeVideo() {
