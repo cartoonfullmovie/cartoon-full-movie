@@ -32,6 +32,7 @@
             background-color: var(--bg-dark);
             color: var(--text-light);
             padding-bottom: 50px;
+            position: relative;
         }
 
         /* --- الهيدر --- */
@@ -409,6 +410,75 @@
             padding: 40px;
         }
 
+        /* --- 🌟 تصميم مساعد الكرتون التفاعلي في الزاوية 🌟 --- */
+        .interactive-assistant {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* حاوية دائرية للفيديو لتشبه وجوه المساعدين الأذكياء */
+        .assistant-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--accent-green);
+            box-shadow: 0 5px 20px rgba(34, 197, 94, 0.6);
+            background-color: #000;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .assistant-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .assistant-avatar video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* فقاعة نصية تظهر فوق رأس الشخصية تشرح مهمتها */
+        .assistant-bubble {
+            background-color: var(--bg-card);
+            color: var(--text-light);
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            border: 2px solid var(--accent-green);
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            pointer-events: none;
+            position: relative;
+            animation: bounce 2s infinite;
+        }
+
+        .assistant-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: var(--bg-card) transparent;
+            display: block;
+            width: 0;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
         /* --- التجاوب مع الشاشات --- */
         @media (max-width: 992px) {
             .main-layout {
@@ -425,6 +495,11 @@
             }
             .hero-banner {
                 height: 250px;
+            }
+            /* جعل المساعد أصغر على الهواتف */
+            .assistant-avatar {
+                width: 90px;
+                height: 90px;
             }
         }
     </style>
@@ -446,6 +521,7 @@
 
     <div class="main-layout">
         
+        <!-- القائمة الجانبية -->
         <aside class="sidebar">
             <div class="sidebar-title">
                 <span>📁</span> تصنيفات السينما
@@ -475,6 +551,7 @@
             </ul>
         </aside>
 
+        <!-- المحتوى الرئيسي -->
         <main class="content-area">
             
             <section class="hero-banner" id="heroSection">
@@ -485,16 +562,20 @@
                 </div>
             </section>
 
+            <!-- عنوان الصفحة و أزرار التحكم -->
             <div class="section-header-container">
                 <h2 class="section-title" id="pageTitle">✨ المقترحة لك الآن</h2>
                 <button class="back-btn" id="backBtn" style="display: none;" onclick="backToMain()">⬅ عودة للرئيسية</button>
             </div>
 
+            <!-- شبكة الكروت -->
             <section class="section-container">
                 <div class="grid-layout" id="cardsGrid">
-                    </div>
+                    <!-- الكروت يتم توليدها ديناميكياً -->
+                </div>
             </section>
 
+            <!-- ركن الأنشطة -->
             <section class="activities-banner">
                 <div class="activities-text">
                     <h3>✂️ ركن الأنشطة اليدوية والتلوين!</h3>
@@ -506,6 +587,19 @@
         </main>
     </div>
 
+    <!-- 🌟 المساعد الكرتوني التفاعلي في زاوية الشاشة 🌟 -->
+    <div class="interactive-assistant" id="interactiveAssistant">
+        <div class="assistant-bubble" id="assistantBubble">اضغط عليّ لأرحب بك! 👋</div>
+        <div class="assistant-avatar" onclick="toggleAssistantSpeech()">
+            <!-- فيديو الشخصية الكرتونية المتحركة -->
+            <video id="assistantVideo" playsinline loop>
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-funny-cartoon-monster-talking-and-waving-40156-large.mp4" type="video/mp4">
+                متصفحك لا يدعم تشغيل هذا الفيديو.
+            </video>
+        </div>
+    </div>
+
+    <!-- مشغل الفيديو -->
     <div class="video-modal" id="videoModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeVideo()">&times;</span>
@@ -519,6 +613,7 @@
         </div>
     </div>
 
+    <!-- الجافا سكريبت المطورة والجاهزة -->
     <script>
         const libraryData = [
             {
@@ -530,6 +625,7 @@
                 img: "https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?q=80&w=300",
                 isSeries: true, 
                 parts: [
+                    // هنا تم إدراج رابط الحلقة الأول ديلى موشن بعد تحويله بنجاح لرابط تضمين (Embed) ليعمل بسلاسة
                     { name: "سلاحف النينجا - الموسم الأول (الحلقة 1)", videoUrl: "https://www.dailymotion.com/embed/video/xap685u", badge: "الموسم 1" },
                     { name: "سلاحف النينجا - الموسم الثاني", videoUrl: "https://www.youtube.com/embed/gLshK7p9o2E", badge: "الموسم 2" },
                     { name: "فيلم سلاحف النينجا: مغامرة الفضاء", videoUrl: "https://www.youtube.com/embed/fD14S9A_mlo", badge: "فيلم مميز" }
@@ -609,7 +705,32 @@
 
         window.onload = function() {
             renderContent();
+            
+            // إظهار ترحيب تلقائي بعد ثانيتين من فتح الصفحة
+            setTimeout(() => {
+                document.getElementById("assistantBubble").innerText = "يا مرحباً بك يا بطل! 🍿";
+            }, 2000);
         };
+
+        // دالة التحكم بتشغيل وإيقاف المساعد الكرتوني
+        function toggleAssistantSpeech() {
+            const video = document.getElementById("assistantVideo");
+            const bubble = document.getElementById("assistantBubble");
+            
+            if (video.paused) {
+                video.play();
+                bubble.innerText = "أنا المساعد السحري! استمتع بالمشاهدة! 🎉";
+                
+                // إيقاف الحركة تلقائياً بعد 8 ثوانٍ لتوفير موارد المتصفح
+                setTimeout(() => {
+                    video.pause();
+                    bubble.innerText = "اضغط عليّ مجدداً لأتحدث! 👍";
+                }, 8000);
+            } else {
+                video.pause();
+                bubble.innerText = "اضغط عليّ مجدداً لأتحدث! 👍";
+            }
+        }
 
         function renderContent(searchQuery = "") {
             isInsideSeries = false;
