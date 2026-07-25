@@ -168,7 +168,6 @@ function toggleAssistantSpeech() {
     }
 }
 
-// دالة العرض المقسمة
 function renderContent(searchQuery = "") {
     isInsideSeries = false;
     document.getElementById("backBtn").style.display = "none"; 
