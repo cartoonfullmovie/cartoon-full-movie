@@ -1,0 +1,20 @@
+backend:
+  name: github
+  repo: cartoonfullmovie/cartoon-full-movie # اسم المستودع الخاص بك
+  branch: main # أو master حسب اسم الفرع الرئيسي لديك
+
+media_folder: "assets/images" # المجلد الذي ستحفظ فيه صور الكرتون
+public_folder: "/assets/images"
+
+collections:
+  - name: "movies"
+    label: "الأفلام والمسلسلات"
+    folder: "content/movies"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "عنوان الفيلم/المسلسل", name: "title", widget: "string" }
+      - { label: "الصورة المصغرة", name: "thumbnail", widget: "image" }
+      - { label: "رابط الفيديو", name: "video_url", widget: "string" }
+      - { label: "الوصف", name: "description", widget: "text" }
+      - { label: "التصنيف", name: "category", widget: "select", options: ["أفلام", "مسلسلات", "بطولات"] }
